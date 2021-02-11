@@ -11,7 +11,7 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
-        self.image = pygame.image.load(os.path.join('', 'player.png'))
+        self.image = pygame.image.load(os.path.join('', 'img/player.png'))
         self.rect = pygame.Rect(128, 128, 32, 32)
 
     def update(self, up, down, left, right, running, platform):

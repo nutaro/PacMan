@@ -1,5 +1,3 @@
-#! /usr/bin/python
-
 from pygame import *
 from Platform import Platform
 from Player import Player
@@ -54,7 +52,7 @@ def main():
     player = Player()
     platforms = []
 
-    block = pygame.image.load(os.path.join('', 'block.png'))
+    block = pygame.image.load(os.path.join('', 'img/block.png'))
 
     x = y = 0
     level = [
