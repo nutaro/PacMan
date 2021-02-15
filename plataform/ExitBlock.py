@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Platform import Platform
+from plataform.Platform import Platform
 from pygame import Color
 
 
