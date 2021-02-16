@@ -6,13 +6,13 @@ from pygame import Surface
 
 from Entity import Entity
 from Player import Player
-from plataform import Platform, ExitBlock
+from plataform import Platform, ExitBlock, NoneBlock
 
 
 class Maze:
 
     def __init__(self, x: int, y: int) -> None:
-        self._players = Player()
+        self._player = Player()
         self._block = pygame.image.load(os.path.join('', 'img/block.png'))
         self._entities = pygame.sprite.Group()
         self._platforms = list()
@@ -29,7 +29,7 @@ class Maze:
 
     @property
     def player(self) -> Player:
-        return self._players
+        return self._player
 
     @property
     def platforms(self) -> list:
@@ -40,21 +40,21 @@ class Maze:
         return self._entities
 
     def build(self):
-        x = y = 0
+        row_number = col_number = 0
         # build the level
         for row in self._level:
             for col in row:
                 if col not in ["0", "E"]:
-                    platform = Platform(x, y, pygame.image.load(os.path.join('', 'img/block2.png')))
+                    platform = NoneBlock(row_number, col_number, self._block)
                 if col == "0":
-                    platform = Platform(x, y, self._block)
+                    platform = Platform(row_number, col_number, self._block)
                 if col == "E":
-                    platform = ExitBlock(x, y)
+                    platform = ExitBlock(row_number, col_number)
                 self._entities.add(platform)
                 self._platforms.append(platform)
-            x += 32
-        y += 32
-        x = 0
+                row_number += 32
+            col_number += 32
+            row_number = 0
 
     def draw_screen(self, screen: object) -> None:
         for y in range(32):
