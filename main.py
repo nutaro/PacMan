@@ -49,7 +49,7 @@ def main():
 
     maze = Maze(32, 32)
     maze.background.convert()
-    maze.background.fill(Color("#09F000"))
+    maze.background.fill(Color("#000000"))
     maze.entities.add(maze.player)
     maze.build()
 

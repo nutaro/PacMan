@@ -6,7 +6,7 @@ from pygame import Surface
 
 from Entity import Entity
 from Player import Player
-from plataform import Platform, ExitBlock, NoneBlock
+from plataform import Platform, ExitBlock, PointBlock
 
 
 class Maze:
@@ -14,6 +14,7 @@ class Maze:
     def __init__(self, x: int, y: int) -> None:
         self._player = Player()
         self._block = pygame.image.load(os.path.join('', 'img/block.png'))
+        self._point_block = pygame.image.load(os.path.join('', 'img/points.png'))
         self._entities = pygame.sprite.Group()
         self._platforms = list()
         self._level = json.load(open("maze.json", "rb"))
@@ -45,11 +46,11 @@ class Maze:
         for row in self._level:
             for col in row:
                 if col not in ["0", "E"]:
-                    platform = NoneBlock(row_number, col_number, self._block)
+                    platform = PointBlock(row_number, col_number, self._point_block)
                 if col == "0":
                     platform = Platform(row_number, col_number, self._block)
                 if col == "E":
-                    platform = ExitBlock(row_number, col_number)
+                    platform = ExitBlock(row_number, col_number, self._block)
                 self._entities.add(platform)
                 self._platforms.append(platform)
                 row_number += 32
