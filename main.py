@@ -1,7 +1,8 @@
 from pygame import *
-from Platform import Platform
+
+from maze import Maze
+from plataform import Platform, ExitBlock
 from Player import Player
-from ExitBlock import ExitBlock
 
 import pygame
 import os
@@ -45,72 +46,16 @@ def main():
     timer = pygame.time.Clock()
 
     up = down = left = right = running = False
-    bg = Surface((32, 32))
-    bg.convert()
-    bg.fill(Color("#000000"))
-    entities = pygame.sprite.Group()
-    player = Player()
-    platforms = []
 
-    block = pygame.image.load(os.path.join('', 'img/block.png'))
+    maze = Maze(32, 32)
+    maze.background.convert()
+    maze.background.fill(Color("#000000"))
+    maze.entities.add(maze.player)
+    maze.build()
 
-    x = y = 0
-    level = [
-        "0000000000000000000000000000",
-        "0000000000000000000000000000",
-        "0000000000000000000000000000",
-        "0000000000000000000000000000",
-        "0+----+-----+00+-----+----+0",
-        "0|0000|00000|00|00000|0000|0",
-        "0|0000|00000|00|00000|0000|0",
-        "0|0000|00000|00|00000|0000|0",
-        "0+----+--+--+--+--+--+----+0",
-        "0|0000|00|00000000|00|0000|0",
-        "0|0000|00|00000000|00|0000|0",
-        "0+----+00+--+00+--+00+----+0",
-        "000000|00000|00|00000|000000",
-        "000000|00000|00|00000|000000",
-        "000000|00+--+--+--+00|000000",
-        "000000|00|00000000|00|000000",
-        "000000|00|00000000|00|000000",
-        "+-----+--+00000000+--+-----+",
-        "000000|00|00000000|00|000000",
-        "000000|00|00000000|00|000000",
-        "000000|00+--------+00|000000",
-        "000000|00|00000000|00|000000",
-        "000000|00|00000000|00|000000",
-        "0+----+--+--+00+--+--+----+0",
-        "0|0000|00000|00|00000|0000|0",
-        "0|0000|00000|00|00000|0000|0",
-        "0+-+00+--+--+--+--+--+00+-+0",
-        "000|00|00|00000000|00|00|000",
-        "000|00|00|00000000|00|00|000",
-        "0+-+--+00+--+00+--+00+--+-+0",
-        "0|0000000000|00|0000000000|0",
-        "0|0000000000|00|0000000000|0",
-        "0+----------+--+----------+0",
-        "0000000000000000000000000000",
-        "0000000000000000000000000000",
-        "0000000000000000000000000000"]
-    # build the level
-    for row in level:
-        for col in row:
-            if col == "0":
-                p = Platform(x, y, block)
-                platforms.append(p)
-                entities.add(p)
-            if col == "E":
-                e = ExitBlock(x, y)
-                platforms.append(e)
-                entities.add(e)
-            x += 32
-        y += 32
-        x = 0
-
-    total_level_width = len(level[0]) * 32
-    total_level_height = len(level) * 32
+    total_level_width = len(maze.level[0]) * 32
+    total_level_height = len(maze.level) * 32
     camera = Camera(complex_camera, total_level_width, total_level_height)
-    entities.add(player)
 
     while 1:
         timer.tick(60)
@@ -141,15 +86,13 @@ def main():
                 left = False
 
         # draw background
-        for y in range(32):
-            for x in range(32):
-                screen.blit(bg, (x * 32, y * 32))
+        maze.draw_screen(screen)
 
-        camera.update(player)
+        camera.update(maze.player)
 
         # update player, draw everything else
-        player.update(up, down, left, right, running, platforms)
-        for e in entities:
+        maze.player.update(up, down, left, right, running, maze.platforms)
+        for e in maze.entities:
             screen.blit(e.image, camera.apply(e))
 
         pygame.display.update()
