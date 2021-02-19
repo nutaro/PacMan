@@ -6,13 +6,13 @@ from Entity import Entity
 
 
 class Player(Entity):
-    def __init__(self):
-        super(Entity, self).__init__()
+    def __init__(self, x: int, y: int):
+        super().__init__()
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
         self.image = pygame.image.load(os.path.join('', 'img/player.png'))
-        self.rect = pygame.Rect(128, 128, 32, 32)
+        self.rect = pygame.Rect(128, 128, x, y)
 
     def update(self, up, down, left, right, running, platform):
         if up:

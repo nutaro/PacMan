@@ -1,11 +1,9 @@
-from pygame import *
+from pygame import Rect, Color, display
+from pygame.constants import *
 
 from maze import Maze
-from plataform import Platform, ExitBlock
-from Player import Player
 
 import pygame
-import os
 
 # https://stackoverflow.com/questions/14354171/add-scrolling-to-a-platformer-in-pygame
 
@@ -41,8 +39,8 @@ def complex_camera(camera, target_rect):
 def main():
     global cameraX, cameraY
     pygame.init()
-    screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
-    pygame.display.set_caption("Use arrows to move!")
+    screen = display.set_mode(DISPLAY, FLAGS, DEPTH)
+    display.set_caption("Use arrows to move!")
     timer = pygame.time.Clock()
 
     up = down = left = right = running = False
@@ -51,7 +49,7 @@ def main():
     maze.background.convert()
     maze.background.fill(Color("#000000"))
     maze.entities.add(maze.player)
-    maze.build()
+    maze.build_platform()
 
     total_level_width = len(maze.level[0]) * 32
     total_level_height = len(maze.level) * 32
@@ -72,9 +70,9 @@ def main():
             if e.type == KEYDOWN and e.key == K_LEFT:
                 left = True
             if e.type == KEYDOWN and e.key == K_RIGHT:
-                right = True
+                right = False
             if e.type == KEYDOWN and e.key == K_SPACE:
-                running = True
+                running = False
 
             if e.type == KEYUP and e.key == K_UP:
                 up = False
@@ -85,7 +83,6 @@ def main():
             if e.type == KEYUP and e.key == K_LEFT:
                 left = False
 
-        # draw background
         maze.draw_screen(screen)
 
         camera.update(maze.player)
@@ -95,7 +92,7 @@ def main():
         for e in maze.entities:
             screen.blit(e.image, camera.apply(e))
 
-        pygame.display.update()
+        display.update()
 
 
 class Camera(object):
