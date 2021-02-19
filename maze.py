@@ -1,8 +1,8 @@
 import json
 import os
-import pygame
 
-from pygame import Surface
+from pygame import Surface, image
+from pygame.sprite import Group
 
 from Entity import Entity
 from Player import Player
@@ -12,10 +12,10 @@ from plataform import Platform, ExitBlock, PointBlock
 class Maze:
 
     def __init__(self, x: int, y: int) -> None:
-        self._player = Player()
-        self._block = pygame.image.load(os.path.join('', 'img/block.png'))
-        self._point_block = pygame.image.load(os.path.join('', 'img/points.png'))
-        self._entities = pygame.sprite.Group()
+        self._player = Player(x, y)
+        self._block = image.load(os.path.join('', 'img/block.png'))
+        self._point_block = image.load(os.path.join('', 'img/points.png'))
+        self._entities = Group()
         self._platforms = list()
         self._level = json.load(open("maze.json", "rb"))
         self._surface = Surface((x, y))
@@ -40,9 +40,8 @@ class Maze:
     def entities(self) -> Entity:
         return self._entities
 
-    def build(self):
+    def build_platform(self):
         row_number = col_number = 0
-        # build the level
         for row in self._level:
             for col in row:
                 if col not in ["0", "E"]:
@@ -57,7 +56,7 @@ class Maze:
             col_number += 32
             row_number = 0
 
-    def draw_screen(self, screen: object) -> None:
+    def draw_screen(self, screen) -> None:
         for y in range(32):
             for x in range(32):
                 screen.blit(self.background, (x * 32, y * 32))
